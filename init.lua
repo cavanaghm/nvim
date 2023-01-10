@@ -69,11 +69,6 @@ require('packer').startup(function(use)
   end
 end)
 
--- local nnoremap = require("mblc.keymap").nnoremap
--- local inoremap = require("mblc.keymap").inoremap
--- local vnoremap = require("mblc.keymap").vnoremap
--- local nmap = require("mblc.keymap").nmap
-
 -- When we are bootstrapping a configuration, it doesn't
 -- make sense to execute the rest of the init.lua.
 --
@@ -106,7 +101,7 @@ vim.wo.number = true
 vim.wo.rnu = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.o.mouse = ''
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -133,6 +128,28 @@ vim.opt.sidescrolloff = 10
 vim.o.termguicolors = true
 vim.cmd [[colorscheme gruvbox]]
 
+vim.cmd("set noerrorbells")
+
+-- Remove trailing whitespace in certain files
+vim.cmd("autocmd BufWritePre *.css %s/\\s\\+$//e")
+vim.cmd("autocmd BufWritePre *.js %s/\\s\\+$//e")
+vim.cmd("autocmd BufWritePre *.json %s/\\s\\+$//e")
+vim.cmd("autocmd BufWritePre *.html %s/\\s\\+$//e")
+
+-- alias :W => :w
+vim.cmd("cabbr W w")
+-- alias :qwa => :wqa
+vim.cmd("cabbr qwa wqa")
+-- alias :Wqa => :wqa
+vim.cmd("cabbr Wqa wqa")
+-- alias :WQA => :wqa
+vim.cmd("cabbr Wqa wqa")
+-- alias :Q => :q
+vim.cmd("cabbr Q q")
+-- command alias f -> function. Useful when locating function names as you can just type 'f ' followed by the name
+vim.cmd("ca f function")
+
+vim.g.mapleader = " "
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,preview'
 
@@ -432,6 +449,11 @@ require('lspconfig').sumneko_lua.setup {
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -449,8 +471,11 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+        cmp.complete()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
+      -- elseif has_words_before then
+      --   cmp.complete()
       else
         fallback()
       end
