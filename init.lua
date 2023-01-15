@@ -117,6 +117,8 @@ vim.o.smartcase = true
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
+vim.opt.wrapscan = false
+
 -- Make file name completion work just like bash
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest,list"
