@@ -65,6 +65,22 @@ require('packer').startup(function(use)
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
+
+  require('telescope').setup {
+    pickers = {
+      find_files = {
+        theme = "dropdown",
+      },
+    },
+  }
+  local builtin = require('telescope.builtin')
+  vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
+
+  use {
+   "folke/trouble.nvim",
+   requires = { "nvim-tree/nvim-web-devicons" },
+  }
+
   use "github/copilot.vim"
   vim.g.copilot_no_tab_map = true
   vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
@@ -162,8 +178,7 @@ require('Comment').setup()
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
--- Don't use this and need this bind
--- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '<S-r>', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings.
