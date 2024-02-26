@@ -1,6 +1,6 @@
 require('mblc.set')
 require('mblc.cmp')
-require('mblc.test')
+require('mblc.augroups')
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local is_bootstrap = false
@@ -170,7 +170,7 @@ require('Comment').setup()
 
 -- Enable `lukas-reineke/indent-blankline.nvim`
 -- See `:help indent_blankline.txt`
--- require('indent_blankline').setup {
+-- require("indent_blankline").setup {
 --   char = '┊',
 --   show_trailing_blankline_indent = false,
 -- }
@@ -178,7 +178,7 @@ require('Comment').setup()
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<S-r>', vim.diagnostic.open_float)
+-- vim.keymap.set('n', '<S-r>', vim.diagnostic.open_float) --@Todo: Fix this
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings.

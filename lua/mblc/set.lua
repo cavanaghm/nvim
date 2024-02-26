@@ -31,8 +31,8 @@ vim.opt.wrapscan = false
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest,list"
 
-vim.opt.scrolloff = 10
-vim.opt.sidescrolloff = 10
+vim.opt.scrolloff = 15
+vim.opt.sidescrolloff = 25
 
 -- Set colorscheme
 vim.o.termguicolors = true
