@@ -56,6 +56,7 @@ require('packer').startup(function(use)
 
   use 'navarasu/onedark.nvim' -- Theme inspired by Atom
   use 'morhetz/gruvbox'
+  use 'folke/tokyonight.nvim'
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
@@ -86,14 +87,14 @@ require('packer').startup(function(use)
   use "github/copilot.vim"
   vim.g.copilot_no_tab_map = true
   vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-  use {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({})
-    end,
-  }
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   cmd = "Copilot",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup({})
+  --   end,
+  -- }
 
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')

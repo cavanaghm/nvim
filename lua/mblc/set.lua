@@ -36,6 +36,8 @@ vim.opt.sidescrolloff = 25
 
 -- Set colorscheme
 vim.o.termguicolors = true
-vim.cmd [[colorscheme gruvbox]]
+-- vim.cmd [[colorscheme gruvbox]]
+-- vim.cmd [[colorscheme slate]]
+vim.cmd [[colorscheme tokyonight-night]]
 
 vim.cmd("set noerrorbells")
