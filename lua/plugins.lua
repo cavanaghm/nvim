@@ -10,8 +10,26 @@
 --        end,
 --    }
 require("lazy").setup({
+	"tpope/vim-fugitive",
+	-- {
+	-- 	dir = "/Users/mc/code/vimai",
+	-- 	name = "vimai",
+	-- 	config = function()
+	-- 		require("vimai").setup({
+	-- 			server_cmd = "/Users/mc/code/vimai/vimai",
+	-- 		})
+	-- 	end,
+	-- },
 	{ "NMAC427/guess-indent.nvim", opts = {} },
 	"tpope/vim-surround", -- cs"' cs'"
+	{
+		"mfussenger/nvim-dap",
+		dependencies = {
+			"jay-babu/mason-nvim-dap.nvim",
+			"rcarriga/nvim-dap-ui",
+			"nvim-neotest/nvim-nio",
+		},
+	},
 
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
@@ -24,6 +42,28 @@ require("lazy").setup({
 				changedelete = { text = "~" },
 			},
 		},
+	},
+	{
+		"nvim-mini/mini.pairs",
+		event = "VeryLazy",
+		opts = {
+			modes = { insert = true, command = true, terminal = false },
+			-- skip autopair when next character is one of these
+			skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+			-- skip autopair when the cursor is inside these treesitter nodes
+			skip_ts = { "string" },
+			-- skip autopair when next character is closing pair
+			-- and there are more closing pairs than opening pairs
+			skip_unbalanced = true,
+			-- better deal with markdown code blocks
+			markdown = true,
+		},
+	},
+	"nvim-mini/mini.diff",
+	{
+		"folke/ts-comments.nvim",
+		event = "VeryLazy",
+		opts = {},
 	},
 
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -40,22 +80,22 @@ require("lazy").setup({
 	-- Then, because we use the `opts` key (recommended), the configuration runs
 	-- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-	-- { -- Useful plugin to show you pending keybinds.
-	-- 	"folke/which-key.nvim",
-	-- 	event = "VimEnter",
-	-- 	opts = {
-	-- 		-- delay between pressing a key and opening which-key (milliseconds)
-	-- 		delay = 0,
-	-- 		icons = { mappings = vim.g.have_nerd_font },
-	--
-	-- 		-- Document existing key chains
-	-- 		spec = {
-	-- 			{ "<leader>s", group = "[S]earch", mode = { "n", "v" } },
-	-- 			{ "<leader>t", group = "[T]oggle" },
-	-- 			{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-	-- 		},
-	-- 	},
-	-- },
+	{ -- Useful plugin to show you pending keybinds.
+		"folke/which-key.nvim",
+		event = "VimEnter",
+		opts = {
+			-- delay between pressing a key and opening which-key (milliseconds)
+			delay = 0,
+			icons = { mappings = vim.g.have_nerd_font },
+
+			-- Document existing key chains
+			spec = {
+				{ "<leader>s", group = "[S]earch", mode = { "n", "v" } },
+				{ "<leader>t", group = "[T]oggle" },
+				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+			},
+		},
+	},
 
 	-- NOTE: Plugins can specify dependencies.
 	--
@@ -212,6 +252,7 @@ require("lazy").setup({
 			-- Mason must be loaded before its dependents so we need to set it up here.
 			-- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
 			{ "mason-org/mason.nvim", opts = {} },
+			{ "mason-org/mason-lspconfig.nvim", opts = {} },
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 			-- Useful status updates for LSP.
@@ -297,7 +338,7 @@ require("lazy").setup({
 			--  See `:help lsp-config` for information about keys and how to configure
 			local servers = {
 				-- clangd = {},
-				lua_ls = {},
+				-- lua_ls = {},
 				gopls = {},
 				pyright = {},
 				-- rust_analyzer = {},
@@ -456,7 +497,7 @@ require("lazy").setup({
 				-- <c-k>: Toggle signature help
 				--
 				-- See :h blink-cmp-config-keymap for defining your own keymap
-				preset = "super-tab",
+				preset = "enter",
 
 				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -494,6 +535,7 @@ require("lazy").setup({
 		},
 	},
 
+	"catppuccin/nvim",
 	{ -- You can easily change to a different colorscheme.
 		-- Change the name of the colorscheme plugin below, and then
 		-- change the command in the config to whatever the name of that colorscheme is.
@@ -561,7 +603,6 @@ require("lazy").setup({
 			--  Check out: https://github.com/nvim-mini/mini.nvim
 		end,
 	},
-
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
@@ -577,6 +618,9 @@ require("lazy").setup({
 				"query",
 				"vim",
 				"vimdoc",
+				"go",
+				"yaml",
+				"json",
 			}
 			require("nvim-treesitter").install(filetypes)
 			vim.api.nvim_create_autocmd("FileType", {
@@ -635,3 +679,4 @@ require("lazy").setup({
 		},
 	},
 })
+require("mini.diff").setup()
