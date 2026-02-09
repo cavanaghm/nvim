@@ -10,7 +10,12 @@
 --        end,
 --    }
 require("lazy").setup({
-	"tpope/vim-fugitive",
+	{
+		"tpope/vim-fugitive",
+		dependencies = {
+			"tpope/vim-rhubarb",
+		},
+	},
 	-- {
 	-- 	dir = "/Users/mc/code/vimai",
 	-- 	name = "vimai",
