@@ -1,21 +1,24 @@
--- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
--- Alternatively, use `config = function() ... end` for full control over the configuration.
--- If you prefer to call `setup` explicitly, use:
---    {
---        'lewis6991/gitsigns.nvim',
---        config = function()
---            require('gitsigns').setup({
---                -- Your gitsigns configuration here
---            })
---        end,
---    }
 require("lazy").setup({
-	{
-		"tpope/vim-fugitive",
-		dependencies = {
-			"tpope/vim-rhubarb",
-		},
-	},
+
+	-- @TODO: This is stuff I need to investigate more
+	"tpope/vim-surround", -- cs"' cs'"
+	-- {
+	-- 	"nvim-mini/mini.pairs",
+	-- 	event = "VeryLazy",
+	-- 	opts = {
+	-- 		modes = { insert = true, command = true, terminal = false },
+	-- 		-- skip autopair when next character is one of these
+	-- 		skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+	-- 		-- skip autopair when the cursor is inside these treesitter nodes
+	-- 		skip_ts = { "string" },
+	-- 		-- skip autopair when next character is closing pair
+	-- 		-- and there are more closing pairs than opening pairs
+	-- 		skip_unbalanced = true,
+	-- 		-- better deal with markdown code blocks
+	-- 		markdown = true,
+	-- 	},
+	-- },
+	--
 	-- {
 	-- 	dir = "/Users/mc/code/vimai",
 	-- 	name = "vimai",
@@ -25,11 +28,31 @@ require("lazy").setup({
 	-- 		})
 	-- 	end,
 	-- },
-	{ "NMAC427/guess-indent.nvim", opts = {} },
-	"tpope/vim-surround", -- cs"' cs'"
+	-- @TODO: These need to be investigated a little more
 	{
-		"mfussenger/nvim-dap",
+		"nvim-mini/mini.diff",
+		opts = {},
+	},
+	{
+		"folke/ts-comments.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
+
+	-- From here things are relatively settled
+
+	{
+		"tpope/vim-fugitive",
 		dependencies = {
+			"tpope/vim-rhubarb",
+		},
+	},
+	{ "NMAC427/guess-indent.nvim", opts = {} },
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"leoluz/nvim-dap-go",
+			"theHamsta/nvim-dap-virtual-text",
 			"jay-babu/mason-nvim-dap.nvim",
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
@@ -48,49 +71,13 @@ require("lazy").setup({
 			},
 		},
 	},
-	{
-		"nvim-mini/mini.pairs",
-		event = "VeryLazy",
-		opts = {
-			modes = { insert = true, command = true, terminal = false },
-			-- skip autopair when next character is one of these
-			skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-			-- skip autopair when the cursor is inside these treesitter nodes
-			skip_ts = { "string" },
-			-- skip autopair when next character is closing pair
-			-- and there are more closing pairs than opening pairs
-			skip_unbalanced = true,
-			-- better deal with markdown code blocks
-			markdown = true,
-		},
-	},
-	"nvim-mini/mini.diff",
-	{
-		"folke/ts-comments.nvim",
-		event = "VeryLazy",
-		opts = {},
-	},
-
-	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
-	--
-	-- This is often very useful to both group configuration, as well as handle
-	-- lazy loading plugins that don't need to be loaded immediately at startup.
-	--
-	-- For example, in the following configuration, we use:
-	--  event = 'VimEnter'
-	--
-	-- which loads which-key before all the UI elements are loaded. Events can be
-	-- normal autocommands events (`:help autocmd-events`).
-	--
-	-- Then, because we use the `opts` key (recommended), the configuration runs
-	-- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
 	{ -- Useful plugin to show you pending keybinds.
 		"folke/which-key.nvim",
 		event = "VimEnter",
 		opts = {
 			-- delay between pressing a key and opening which-key (milliseconds)
-			delay = 0,
+			delay = 200,
 			icons = { mappings = vim.g.have_nerd_font },
 
 			-- Document existing key chains
@@ -102,24 +89,8 @@ require("lazy").setup({
 		},
 	},
 
-	-- NOTE: Plugins can specify dependencies.
-	--
-	-- The dependencies are proper plugin specifications as well - anything
-	-- you do for a plugin at the top level, you can do for a dependency.
-	--
-	-- Use the `dependencies` key to specify the dependencies of a particular plugin
-
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
-		-- By default, Telescope is included and acts as your picker for everything.
-
-		-- If you would like to switch to a different picker (like snacks, or fzf-lua)
-		-- you can disable the Telescope plugin by setting enabled to false and enable
-		-- your replacement picker by requiring it explicitly (e.g. 'custom.plugins.snacks')
-
-		-- Note: If you customize your config for yourself,
-		-- it’s best to remove the Telescope plugin config entirely
-		-- instead of just disabling it here, to keep your config clean.
 		enabled = true,
 		event = "VimEnter",
 		dependencies = {
@@ -163,19 +134,27 @@ require("lazy").setup({
 			-- Enable Telescope extensions if they are installed
 			pcall(require("telescope").load_extension, "fzf")
 			pcall(require("telescope").load_extension, "ui-select")
+			local map = function(keys, func, desc)
+				vim.keymap.set("n", keys, func, { desc = "LSP: " .. desc })
+			end
 
 			-- See `:help telescope.builtin`
 			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "[F]ind [H]elp" })
-			vim.keymap.set("n", "<leader>fg", builtin.keymaps, { desc = "[F]ind [K]eymaps" })
-			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
-			vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "[F]ind [S]elect Telescope" })
-			vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[F]ind current [W]ord" })
-			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "[F]ind by [G]rep" })
-			vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[F]ind [D]iagnostics" })
-			vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[F]ind [R]esume" })
-			vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
-			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+			map("<leader>fh", builtin.help_tags, "[F]ind [H]elp")
+			map("<leader>fg", builtin.keymaps, "[F]ind [K]eymaps")
+			map("<leader>ff", builtin.find_files, "[F]ind [F]iles")
+			map("<leader>fs", builtin.builtin, "[F]ind [S]elect Telescope")
+			map("<leader>fw", builtin.grep_string, "[F]ind current [W]ord")
+			map("<leader>fg", builtin.live_grep, "[F]ind by [G]rep")
+			map("<leader>fd", builtin.diagnostics, "[F]ind [D]iagnostics")
+			map("<leader>fr", builtin.resume, "[F]ind [R]esume")
+			map("<leader>f.", builtin.oldfiles, '[F]ind Recent Files ("." for repeat)')
+			map("<leader><leader>", builtin.buffers, "[ ] Find existing buffers")
+			map("gd", builtin.lsp_definitions, "[ ] Find existing buffers")
+			map("gr", builtin.lsp_references, "[G]oto [R]eferences")
+			map("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
+			map("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
+			map("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
 
 			vim.keymap.set("n", "<leader>/", function()
 				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
@@ -438,9 +417,11 @@ require("lazy").setup({
 				lua = { "stylua" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
+				go = { "gofmt", "goimport" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
-				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascript = { "prettierd", "prettier", "eslist_d", stop_after_first = false },
+				typescript = { "prettierd", "prettier", "eslist_d", stop_after_first = false },
 			},
 		},
 	},
@@ -467,12 +448,13 @@ require("lazy").setup({
 					-- `friendly-snippets` contains a variety of premade snippets.
 					--    See the README about individual language/framework/plugin snippets:
 					--    https://github.com/rafamadriz/friendly-snippets
-					-- {
-					--   'rafamadriz/friendly-snippets',
-					--   config = function()
-					--     require('luasnip.loaders.from_vscode').lazy_load()
-					--   end,
-					-- },
+					-- @TODO: Testing these
+					{
+						"rafamadriz/friendly-snippets",
+						config = function()
+							require("luasnip.loaders.from_vscode").lazy_load()
+						end,
+					},
 				},
 				opts = {},
 			},
@@ -537,6 +519,9 @@ require("lazy").setup({
 
 			-- Shows a signature help window while you type arguments for a function
 			signature = { enabled = true },
+
+			-- Disable for cmdline, I prefer wildmenu list configured in opts
+			cmdline = { enabled = false },
 		},
 	},
 

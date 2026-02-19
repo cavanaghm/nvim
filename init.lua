@@ -3,11 +3,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-require("opts")
-require("keybinds")
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+--    Should auto install lazy.nvim if it's the first install on a new system
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -21,7 +19,10 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+require("opts")
+require("keybinds")
 require("plugins")
 require("debuggers")
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

@@ -80,6 +80,15 @@ vim.opt.wildmode = "longest,list"
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+vim.opt.wrapscan = false
+
+-- Enable folding
+vim.o.foldmethod = "indent"
+vim.o.foldenable = true
+
+vim.o.foldlevel = 99
+vim.o.foldminlines = 5
+
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
 vim.diagnostic.config({
