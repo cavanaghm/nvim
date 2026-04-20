@@ -33,6 +33,7 @@ dap.configurations.go = {
 		name = "Debug package tests",
 		request = "launch",
 		mode = "test",
+		outputMode = "remote",
 		args = { "-test.v" },
 		program = "${fileDirname}",
 	},

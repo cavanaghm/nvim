@@ -338,6 +338,11 @@ require("lazy").setup({
 			vim.list_extend(ensure_installed, {
 				"lua_ls", -- Lua Language server
 				"stylua", -- Used to format Lua code
+				"prettierd",
+				"eslint_d",
+				"goimports",
+				"ruff",
+				"pyright",
 				-- You can add other tools here that you want Mason to install
 			})
 
@@ -408,7 +413,7 @@ require("lazy").setup({
 					return nil
 				else
 					return {
-						timeout_ms = 500,
+						timeout_ms = 1000,
 						lsp_format = "fallback",
 					}
 				end
@@ -417,11 +422,14 @@ require("lazy").setup({
 				lua = { "stylua" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
-				go = { "gofmt", "goimport" },
+				go = { "gofmt", "goimports", stop_after_first = false },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
-				javascript = { "prettierd", "prettier", "eslist_d", stop_after_first = false },
-				typescript = { "prettierd", "prettier", "eslist_d", stop_after_first = false },
+				javascript = { "prettierd", "eslist_d", stop_after_first = false },
+				typescript = { "prettierd", "eslist_d", stop_after_first = false },
+				json = { "prettierd" },
+				jsonc = { "prettierd" },
+				python = { "ruff" },
 			},
 		},
 	},
